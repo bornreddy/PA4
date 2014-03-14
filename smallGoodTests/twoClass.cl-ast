@@ -13,7 +13,9 @@ Object
 false
 7
 Aaaa
-no_inherits
+inherits
+7
+Main
 1
 attribute_init
 8

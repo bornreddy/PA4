@@ -4,6 +4,6 @@ class Main {
  };
 };
 
-class Aaaa {
+class Aaaa inherits Main {
   l : Int <- 77;
 };
