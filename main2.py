@@ -144,67 +144,107 @@ class block_object:
   def __init__(self, lineno, expression_list):
     self.lineno = lineno
     self.expression_list = expression_list
+  def __str__(self):
+    return self.lineno + "\nblock\n" + str(len(self.expression_list)) + "\n" + list_to_string(self.expression_list)
+
 class new_object:
   def __init__(self, lineno, class_name):
   	self.lineno = lineno
   	self.class_name = class_name
+  def __str__(self):
+    return self.lineno + "\nnew\n" + str(self.class_name)
+
 class isvoid_object:
   def __init__(self, lineno, e):
     self.lineno = lineno
     self.e = e
+  def __str__(self):
+    return self.lineno + "\nisvoid\n" + str(self.e)
+
 class plus_object:
   def __init__(self, lineno, x, y):
   	self.lineno = lineno
   	self.x = x
   	self.y = y
+  def __str__(self):
+    return self.lineno + "\nplus\n" + str(self.x) + "\n" + str(self.y)
+
 class minus_object:
   def __init__(self, lineno, x, y):
   	self.lineno = lineno
   	self.x = x
   	self.y = y
+  def __str__(self):
+    return self.lineno + "\nminus\n" + str(self.x) + "\n" + str(self.y)
+
 class times_object:
   def __init__(self, lineno, x, y):
   	self.lineno = lineno
   	self.x = x
   	self.y = y
+  def __str__(self):
+    return self.lineno + "\ntimes\n" + str(self.x) + "\n" + str(self.y)
+
 class divide_object:
   def __init__(self, lineno, x, y):
   	self.lineno = lineno
   	self.x = x
-  	self.y = y  
+  	self.y = y
+  def __str__(self):
+    return self.lineno + "\ndivide\n" + str(self.x) + "\n" + str(self.y)
+
 class lt_object:
   def __init__(self, lineno, x, y):
   	self.lineno = lineno
   	self.x = x
   	self.y = y
+  def __str__(self):
+    return self.lineno + "\nlt\n" + str(self.x) + "\n" + str(self.y)
+
 class le_object:
   def __init__(self, lineno, x, y):
     self.lineno = lineno
     self.x = x
     self.y = y
+  def __str__(self):
+    return self.lineno + "\nle\n" + str(self.x) + "\n" + str(self.y)
+
 class eq_object:
   def __init__(self, lineno, x, y):
   	self.lineno = lineno
   	self.x = x
   	self.y = y
+  def __str__(self):
+    return self.lineno + "\neq\n" + str(self.x) + "\n" + str(self.y)
+
 class not_object:
   def __init__(self, lineno, x):
   	self.lineno = lineno
   	self.x = x
+  def __str__(self):
+    return self.lineno + "\nnot\n" + str(self.x)
+
 class negate_object:
   def __init__(self, lineno, x):
   	self.lineno = lineno
   	self.x = x
+  def __str__(self):
+    return self.lineno + "\nnegate\n" + str(self.x)
+
 class integer_object:
   def __init__(self, lineno, value):
     self.lineno = lineno
     self.value = value
   def __str__(self):
     return self.lineno + "\ninteger\n" + self.value
+
 class string_object:
   def __init__(self, lineno, constant):
     self.lineno = lineno
     self.constant = constant
+  def __str__(self):
+    return self.lineno + "\nstring\n" + self.constant
+    
 class expr_identifier_object:
   def __init__(self, lineno, var):
     self.lineno = lineno
