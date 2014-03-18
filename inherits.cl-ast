@@ -1,4 +1,4 @@
-1
+2
 1
 Main
 inherits
@@ -36,3 +36,12 @@ i
 6
 integer
 5
+9
+Marisa
+no_inherits
+1
+attribute_no_init
+10
+m
+10
+Int

@@ -1,5 +1,5 @@
 class_map
-6
+7
 Bool
 0
 IO
@@ -21,6 +21,11 @@ i
 6
 integer
 5
+Marisa
+1
+no_initializer
+m
+Int
 Object
 0
 String

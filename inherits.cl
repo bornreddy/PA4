@@ -5,3 +5,8 @@ class Main inherits IO  {
   i : Int;
   l : Int <- (i <- 5);
 };
+
+class Marisa {
+ m : Int;
+
+};

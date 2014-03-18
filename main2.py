@@ -8,16 +8,19 @@ try:
 except:
  print "improper file entry"
 
+def list_to_string(list):
+  list_string = ""
+  for n in list:
+    list_string = list_string + str(n)
+  return list_string
+
 class program_object:
   def __init__(self):
     self.class_list = []
   def addClass(self, class_object): 
   	self.class_list.append(class_object)
   def __str__(self):
-    class_string = ""
-    for c in self.class_list:
-       class_string = class_string + "\n" + str(c)
-    return str(len(self.class_list)) + class_string
+    return str(len(self.class_list)) + list_to_string(self.class_list)
 
 class no_inherits:
   def __init__(self, name):
@@ -26,10 +29,7 @@ class no_inherits:
   def addFeature(self, feature):
     self.feature_list.append(feature)
   def __str__(self):
-    feature_list_string = ""
-    for n in self.feature_list:
-      feature_list_string = feature_list_string + str(n)
-    return str(self.name) + "\nno_inherits\n" + str(len(self.feature_list)) + "\n" + feature_list_string
+    return str(self.name) + "\nno_inherits\n" + str(len(self.feature_list)) + list_to_string(self.feature_list) 
 
 class inherits:
   def __init__(self, name, superclass):
@@ -39,10 +39,7 @@ class inherits:
   def addFeature(self, feature):
   	self.feature_list.append(feature)
   def __str__(self):
-    feature_list_string = ""
-    for n in self.feature_list:
-      feature_list_string = feature_list_string + str(n)
-    return str(self.name) + "\ninherits\n" + str(self.superclass) + "\n" + str(len(self.feature_list)) + "\n" + feature_list_string
+    return str(self.name) + "\ninherits\n" + str(self.superclass) + "\n" + str(len(self.feature_list)) + list_to_string(self.feature_list)
 
 class identifier:
   def __init__(self, lineno, string):
@@ -55,11 +52,17 @@ class attribute_no_init:
   def __init__(self, name, attr_type):
   	self.name = name
   	self.attr_type = attr_type 
+  def __str__(self):
+    return "\nattribute_no_init\n" + str(self.name) + "\n" + str(self.attr_type) 
+
 class attribute_init:
   def __init__(self, name, attr_type, init):
   	self.name = name
   	self.attr_type = attr_type
   	self.init = init
+  def __str__(self):
+    return "\nattribute_init\n" + str(self.name) + "\n" + str(self.attr_type) + "\n" + str(self.init)
+
 class method:
   def __init__(self, name, formal_list, return_type, body):
     self.name = name
@@ -68,21 +71,36 @@ class method:
     self.body = body
   def addFormal(self, formal):
   	self.formal_list.append(formal)
+  def __str__(self):
+    formal_list_string = ""
+    for n in self.formal_list:
+      formal_list_string = formal_list_string + str(n)
+    return "\nmethod\n" + str(self.name) + formal_list_string + "\n" + str(self.return_type) + "\n" + str(self.body)
+
 class formal: #composed of two identifiers. one for the name, one for the type
   def __init__(self, name, formal_type):
     self.name = name
     self.formal_type = formal_type
+  def __str__(self):
+    return str(self.name) + str(self.formal_type)
+
 class assign:
   def __init__(self, lineno, var, rhs):
     self.lineno = lineno
     self.var = var
     self.rhs = rhs
+  def __str__(self):
+    return self.lineno + "\nassign\n" + str(self.var) + "\n" + str(self.rhs)
+
 class dynamic_dispatch:
   def __init__(self, lineno, expr, method_name, arg_list):
   	self.lineno = lineno
   	self.expr = expr
   	self.method_name = method_name
   	self.arg_list = arg_list
+  # def __str__(self):
+  #   arg_list_string = ""
+  #   return self.lineno + "\ndynamic_dispatch\n" + str(self.expr) + "\n" + str(self.method_name) + "\n" + arg_list
 class static_dispatch:
   def __init__(self, lineno, expr, dispatch_type, method_name, arg_list):
   	self.lineno = lineno
@@ -165,6 +183,8 @@ class integer_object:
   def __init__(self, lineno, value):
     self.lineno = lineno
     self.value = value
+  def __str__(self):
+    return self.lineno + "\ninteger\n" + self.value
 class string:
   def __init__(self, lineno, constant):
     self.lineno = lineno
@@ -396,6 +416,13 @@ parse_program()
 print p 
 
 
+#class map, i'll want to print the classes -- alphabetical, and then print the attributes or the methods
+
+#use isinstance
+# if isinstance(p, program_object):
+#   print "marisa is so kewl"
+# else:
+#   print "she's ok" 
 
 
 
