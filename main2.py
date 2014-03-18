@@ -20,7 +20,10 @@ class program_object:
   def addClass(self, class_object): 
   	self.class_list.append(class_object)
   def __str__(self):
-    return str(len(self.class_list)) + list_to_string(self.class_list)
+    class_list_string = ""
+    for c in self.class_list:
+      class_list_string = class_list_string + "\n" + str(c)
+    return str(len(self.class_list)) + class_list_string
 
 class no_inherits:
   def __init__(self, name):
@@ -70,19 +73,16 @@ class method:
     self.return_type = return_type
     self.body = body
   def addFormal(self, formal):
-  	self.formal_list.append(formal)
+  	self.formal_list.append(formal) #########fix in morning, but if formal list isn't empty this doens't work - i think this can be detected and handled in the list to string method
   def __str__(self):
-    formal_list_string = ""
-    for n in self.formal_list:
-      formal_list_string = formal_list_string + str(n)
-    return "\nmethod\n" + str(self.name) + formal_list_string + "\n" + str(self.return_type) + "\n" + str(self.body)
+    return "\nmethod\n" + str(self.name) + "\n" + str(len(self.formal_list)) + list_to_string(self.formal_list) + "\n" + str(self.return_type) + "\n" + str(self.body)
 
-class formal: #composed of two identifiers. one for the name, one for the type
+class formal: 
   def __init__(self, name, formal_type):
     self.name = name
     self.formal_type = formal_type
   def __str__(self):
-    return str(self.name) + str(self.formal_type)
+    return str(self.name) + "\n" + str(self.formal_type)
 
 class assign:
   def __init__(self, lineno, var, rhs):
@@ -98,9 +98,11 @@ class dynamic_dispatch:
   	self.expr = expr
   	self.method_name = method_name
   	self.arg_list = arg_list
-  # def __str__(self):
-  #   arg_list_string = ""
-  #   return self.lineno + "\ndynamic_dispatch\n" + str(self.expr) + "\n" + str(self.method_name) + "\n" + arg_list
+  def __str__(self):
+    return self.lineno + "\ndynamic_dispatch\n" + \
+    str(self.expr) + "\n" + str(self.method_name) + "\n" + \
+    str(len(self.arg_list)) + list_to_string(self.arg_list)
+  
 class static_dispatch:
   def __init__(self, lineno, expr, dispatch_type, method_name, arg_list):
   	self.lineno = lineno
@@ -108,22 +110,36 @@ class static_dispatch:
   	self.dispatch_type = dispatch_type
   	self.method_name = method_name
   	self.arg_list = arg_list
+  def __str__(self):
+    return self.lineno + "\nstatic_dispatch\n" + str(self.expr) + "\n" + \
+    str(self.dispatch_type) + "\n" + str(self.method_name) + "\n" + \
+    str(len(self.arg_list)) + list_to_string(self.arg_list)
+
 class self_dispatch:
   def __init__(self, lineno, method_name, arg_list):
     self.lineno = lineno
     self.method_name = method_name
     self.arg_list = arg_list
+  def __str__(self):
+    return self.lineno + "\nself_dispatch\n" + str(self.method_name) + "\n" + str(len(self.arg_list)) +  list_to_string(self.arg_list)
+
 class if_object:
-  def __init__(self, lineno, predicate, then, else_statment):
+  def __init__(self, lineno, predicate, then, else_statement):
     self.lineno = lineno
     self.predicate = predicate
     self.then = then
-    self.else_statment = else_statment
+    self.else_statement = else_statement
+  def __str__(self):
+    return self.lineno + "\nif\n" + str(self.predicate) + "\n" + str(self.then) + "\n" + str(self.else_statement)
+
 class while_object:
   def __init__(self, lineno, predicate, body):
     self.lineno = lineno
     self.predicate = predicate
     self.body = body
+  def __str__(self):
+    return self.lineno + "\nwhile\n" + str(self.predicate) + "\n" + str(self.body)
+
 class block_object:
   def __init__(self, lineno, expression_list):
     self.lineno = lineno
@@ -185,7 +201,7 @@ class integer_object:
     self.value = value
   def __str__(self):
     return self.lineno + "\ninteger\n" + self.value
-class string:
+class string_object:
   def __init__(self, lineno, constant):
     self.lineno = lineno
     self.constant = constant
@@ -295,7 +311,7 @@ def get_list_of_expressions():
   expression_list = []
   num_args = int(eat())
   for n in range(0, num_args):
-    arg_list.append(parse_expression())
+    expression_list.append(parse_expression())
   return expression_list 
 
 def parse_branch(): 
