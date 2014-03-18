@@ -244,37 +244,59 @@ class string_object:
     self.constant = constant
   def __str__(self):
     return self.lineno + "\nstring\n" + self.constant
-    
+
 class expr_identifier_object:
   def __init__(self, lineno, var):
     self.lineno = lineno
     self.var = var
+  def __str__(self):
+    return self.lineno + "\nidentifier\n" + str(self.var)
+
 class true_object:
   def __init__(self, lineno):
     self.lineno = lineno
+  def __str__(self):
+    return self.lineno + "\ntrue\n" ###################fix printing issues --- extra spaces when these are in blocks 
+
 class false_object:
   def __init__(self, lineno):
     self.lineno = lineno
+  def __str__(self):
+    return self.lineno + "\nfalse\n"
+
 class let_binding_no_init_object:
   def __init__(self, lineno, variable, expr_type):
     self.lineno = lineno
     self.variable = variable
     self.expr_type = expr_type
+  def __str__(self):
+    return self.lineno + "\nlet_binding_no_init\n" + str(self.variable) + "\n" + str(self.expr_type)
+
 class let_binding_init_object:
   def __init__(self, lineno, variable, expr_type, value):
     self.lineno = lineno
     self.variable = variable
     self.expr_type = expr_type
     self.value = value
+  def __str__(self):
+    return self.lineno + "\nlet_binding_init\n" + str(self.variable) + "\n" + str(self.expr_type) + "\n" + str(self.value)
+
+
 class case_object:
   def __init__(self, lineno, case_expression, branch_list):
+    self.lineno = self.lineno
     self.case_expression = case_expression
     self.branch_list = branch_list
+  def __str__(self):
+    return self.lineno + "\ncase\n" + str(self.case_expression) + "\n" + str(len(self.branch_list)) + list_to_string(self.branch_list)
+
 class branch_object:
   def __init__(self, variable, branch_type, expression):
     self.variable = variable
     self.branch_type = branch_type
     self.expression = expression
+  def __str__(self):
+    return str(self.variable) + "\n" + str(self.branch_type) + "\n" + str(self.expression)
 
 p = program_object()
 
@@ -468,8 +490,29 @@ def parse_expression():
     expression = case_object(lineno, case_expression, branch_list)  
   return expression
 
+
+ #typecheck loop omc assignment
+
+
+
 parse_program()
 print p 
+
+
+
+
+
+
+
+
+
+
+
+#errors
+
+
+
+#print format 
 
 
 #class map, i'll want to print the classes -- alphabetical, and then print the attributes or the methods
@@ -480,22 +523,6 @@ print p
 # else:
 #   print "she's ok" 
 
-
-
-
- 
-
-
-
-
-
-
-
-#errors
-
-#typecheck
-
-#print format 
 
 
 

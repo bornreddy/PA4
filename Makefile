@@ -1,4 +1,4 @@
-test = inherits.cl-ast
+test = test.cl-ast
 
 make:
 

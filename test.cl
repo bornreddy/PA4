@@ -1,8 +1,12 @@
 class Main inherits IO  {
-  main() : Object {
-   4 / 4
+  main() : Int {
+   { true; 5; }
   };
-  i : Int;
-  l : Int <- (i <- 5);
+  i : Marisa;
+  t : Marisa;
+  l : Marisa <- (i <- t);
 };
 
+class Marisa {
+  i : Int;
+};
