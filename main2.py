@@ -8,7 +8,19 @@ try:
 except:
  print "improper file entry"
 
- M = {("Object","abort"):[("Class","Object")], ("Object","type_name"):[("Class","String")], ("Object","copy"):[("SELF_TYPE",C)]}
+
+#how to handle self_type?
+M = {("Object","abort"):[("Class","Object")], \
+    ("Object","type_name"):[("Class","String")],\
+    ("Object","copy"):[("SELF_TYPE","C")],\
+    ("IO","out_string"):[("Class","String"),("SELF_TYPE","C")],
+    ("IO","out_int"):[("Class","Int"),("SELF_TYPE","C")],
+    ("IO","in_string"):[("Class","String")],
+    ("IO","in_int"):[("Class","Int")],
+    ("String","length"):[("Class","Int")],
+    ("String","concat"):[("Class","String"),("Class","String")],
+    ("String","substr"):[("Class","Int"),("Class","Int"),("Class","String")]
+    }
 
 def list_to_string(list):
   list_string = ""
@@ -338,13 +350,15 @@ def parse_class():
     c = no_inherits(name)
     num_features = int(eat())
     for n in range(0,num_features):
-      c.addFeature(parse_feature())
+      f = parse_feature()
+      c.addFeature(f)
   else:
     superclass = parse_identifier()
     c = inherits(name, superclass)
     num_features = int(eat())
     for n in range(0,num_features):
-      c.addFeature(parse_feature())
+      f = parse_feature()
+      c.addFeature(f)
   return c
 
 def parse_identifier():
@@ -512,6 +526,8 @@ def parse_expression():
 
 
 parse_program()
+
+print M
 print p 
 
 
