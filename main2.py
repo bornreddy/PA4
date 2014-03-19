@@ -8,6 +8,8 @@ try:
 except:
  print "improper file entry"
 
+ M = {("Object","abort"):[("Class","Object")], ("Object","type_name"):[("Class","String")], ("Object","copy"):[("SELF_TYPE",C)]}
+
 def list_to_string(list):
   list_string = ""
   for n in list:
@@ -32,7 +34,8 @@ class no_inherits:
   def addFeature(self, feature):
     self.feature_list.append(feature)
   def __str__(self):
-    return str(self.name) + "\nno_inherits\n" + str(len(self.feature_list)) + list_to_string(self.feature_list) 
+    return str(self.name) + "\nno_inherits\n" + str(len(self.feature_list)) \
+     + list_to_string(self.feature_list) 
 
 class inherits:
   def __init__(self, name, superclass):
@@ -42,7 +45,8 @@ class inherits:
   def addFeature(self, feature):
   	self.feature_list.append(feature)
   def __str__(self):
-    return str(self.name) + "\ninherits\n" + str(self.superclass) + "\n" + str(len(self.feature_list)) + list_to_string(self.feature_list)
+    return str(self.name) + "\ninherits\n" + str(self.superclass) + "\n" \
+    + str(len(self.feature_list)) + list_to_string(self.feature_list)
 
 class identifier:
   def __init__(self, lineno, string):
@@ -56,7 +60,8 @@ class attribute_no_init:
   	self.name = name
   	self.attr_type = attr_type 
   def __str__(self):
-    return "\nattribute_no_init\n" + str(self.name) + "\n" + str(self.attr_type) 
+    return "\nattribute_no_init\n" + str(self.name) + "\n" + \
+    str(self.attr_type) 
 
 class attribute_init:
   def __init__(self, name, attr_type, init):
@@ -64,7 +69,8 @@ class attribute_init:
   	self.attr_type = attr_type
   	self.init = init
   def __str__(self):
-    return "\nattribute_init\n" + str(self.name) + "\n" + str(self.attr_type) + "\n" + str(self.init)
+    return "\nattribute_init\n" + str(self.name) + "\n" + str(self.attr_type) \
+    + "\n" + str(self.init)
 
 class method:
   def __init__(self, name, formal_list, return_type, body):
@@ -73,9 +79,12 @@ class method:
     self.return_type = return_type
     self.body = body
   def addFormal(self, formal):
-  	self.formal_list.append(formal) #########fix in morning, but if formal list isn't empty this doens't work - i think this can be detected and handled in the list to string method
+  	self.formal_list.append(formal) #########fix in morning, but if formal list isn't 
+    #empty this doens't work - i think this can be detected and handled in the list to string method
   def __str__(self):
-    return "\nmethod\n" + str(self.name) + "\n" + str(len(self.formal_list)) + list_to_string(self.formal_list) + "\n" + str(self.return_type) + "\n" + str(self.body)
+    return "\nmethod\n" + str(self.name) + "\n" + str(len(self.formal_list)) \
+    + list_to_string(self.formal_list) + "\n" + str(self.return_type) + "\n" \
+    + str(self.body)
 
 class formal: 
   def __init__(self, name, formal_type):
@@ -121,7 +130,8 @@ class self_dispatch:
     self.method_name = method_name
     self.arg_list = arg_list
   def __str__(self):
-    return self.lineno + "\nself_dispatch\n" + str(self.method_name) + "\n" + str(len(self.arg_list)) +  list_to_string(self.arg_list)
+    return self.lineno + "\nself_dispatch\n" + str(self.method_name) + "\n" + \
+    str(len(self.arg_list)) +  list_to_string(self.arg_list)
 
 class if_object:
   def __init__(self, lineno, predicate, then, else_statement):
@@ -130,7 +140,8 @@ class if_object:
     self.then = then
     self.else_statement = else_statement
   def __str__(self):
-    return self.lineno + "\nif\n" + str(self.predicate) + "\n" + str(self.then) + "\n" + str(self.else_statement)
+    return self.lineno + "\nif\n" + str(self.predicate) + "\n" + str(self.then) \
+    + "\n" + str(self.else_statement)
 
 class while_object:
   def __init__(self, lineno, predicate, body):
@@ -145,7 +156,8 @@ class block_object:
     self.lineno = lineno
     self.expression_list = expression_list
   def __str__(self):
-    return self.lineno + "\nblock\n" + str(len(self.expression_list)) + "\n" + list_to_string(self.expression_list)
+    return self.lineno + "\nblock\n" + str(len(self.expression_list)) + "\n" + \
+    list_to_string(self.expression_list)
 
 class new_object:
   def __init__(self, lineno, class_name):
@@ -256,7 +268,8 @@ class true_object:
   def __init__(self, lineno):
     self.lineno = lineno
   def __str__(self):
-    return self.lineno + "\ntrue\n" ###################fix printing issues --- extra spaces when these are in blocks 
+    return self.lineno + "\ntrue\n" ###################fix printing issues ---
+    # extra spaces when these are in blocks 
 
 class false_object:
   def __init__(self, lineno):
@@ -270,7 +283,8 @@ class let_binding_no_init_object:
     self.variable = variable
     self.expr_type = expr_type
   def __str__(self):
-    return self.lineno + "\nlet_binding_no_init\n" + str(self.variable) + "\n" + str(self.expr_type)
+    return self.lineno + "\nlet_binding_no_init\n" + str(self.variable) \
+    + "\n" + str(self.expr_type)
 
 class let_binding_init_object:
   def __init__(self, lineno, variable, expr_type, value):
@@ -279,7 +293,8 @@ class let_binding_init_object:
     self.expr_type = expr_type
     self.value = value
   def __str__(self):
-    return self.lineno + "\nlet_binding_init\n" + str(self.variable) + "\n" + str(self.expr_type) + "\n" + str(self.value)
+    return self.lineno + "\nlet_binding_init\n" + str(self.variable) + "\n" + \
+    str(self.expr_type) + "\n" + str(self.value)
 
 
 class case_object:
@@ -288,7 +303,8 @@ class case_object:
     self.case_expression = case_expression
     self.branch_list = branch_list
   def __str__(self):
-    return self.lineno + "\ncase\n" + str(self.case_expression) + "\n" + str(len(self.branch_list)) + list_to_string(self.branch_list)
+    return self.lineno + "\ncase\n" + str(self.case_expression) + "\n" + str(len(self.branch_list)) \
+    + list_to_string(self.branch_list)
 
 class branch_object:
   def __init__(self, variable, branch_type, expression):
@@ -491,7 +507,7 @@ def parse_expression():
   return expression
 
 
- #typecheck loop omc assignment
+ #typecheck loop omc assignment --- create o for each class, then create 
 
 
 
