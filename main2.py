@@ -33,6 +33,8 @@ class inheritance_node:
     return self.class_name + child_string
 
   def insert(self, inherits_from, class_name):
+    if class_name == "Object":
+      return True;
     if self.class_name == inherits_from:
       found = False
       for c in self.child_list:
@@ -54,7 +56,20 @@ class inheritance_node:
         if c.find(class_name):
           found = True
           break
-      return found 
+      return found
+
+  def propogate_features(self):
+    self.propogate_features_helper([])
+
+  def get_class(self, class_name):
+    for c in p.class_list:
+      if c.name.string == class_name:
+        return c
+
+  def propogate_features_helper(self, ancestor_features):
+    self.get_class(self.class_name).all_features.extend(ancestor_features)
+    for c in self.child_list:
+      c.propogate_features_helper(self.get_class(self.class_name).all_features)
   
 
 Object_tree = inheritance_node("Object")
@@ -79,6 +94,8 @@ class program_object:
   def __str__(self):
     class_list_string = ""
     for c in self.class_list:
+     if (c.name.string != "Object") and (c.name.string != "String") and \
+      (c.name.string != "IO") and (c.name.string != "Bool") and (c.name.string != "Int"):
       class_list_string = class_list_string + "\n" + str(c)
     return str(len(self.class_list)) + class_list_string
 
@@ -86,24 +103,23 @@ class no_inherits:
   def __init__(self, name):
     self.name = name
     self.feature_list = []
-    self.allFeatures = []
+    self.all_features = []
   def addFeature(self, feature):
     self.feature_list.append(feature)
-    self.allFeatures.append(feature)
+    self.all_features.append(feature)
   def __str__(self):
     return str(self.name) + "\nno_inherits\n" + str(len(self.feature_list)) \
      + list_to_string(self.feature_list) 
 
-
 class inherits:
   def __init__(self, name, superclass):
-  	self.name = name
-  	self.superclass = superclass
-  	self.feature_list = []
-    self.allFeatures = []
+    self.name = name
+    self.superclass = superclass
+    self.feature_list = []
+    self.all_features = []
   def addFeature(self, feature):
-  	self.feature_list.append(feature)
-    self.allFeatures.append(feature)
+    self.feature_list.append(feature)
+    self.all_features.append(feature)
   def __str__(self):
     return str(self.name) + "\ninherits\n" + str(self.superclass) + "\n" \
     + str(len(self.feature_list)) + list_to_string(self.feature_list)
@@ -402,7 +418,6 @@ def parse_class():
       c.addFeature(f)
       if isinstance(f,method):
         tup = (c.name.string,f.name.string)
-        print tup
         type_list = []
         for form in f.formal_list:
           if f.formal_type.string == "SELF_TYPE":
@@ -424,7 +439,6 @@ def parse_class():
       c.addFeature(f)
       if isinstance(f,method):
         tup = (c.name.string,f.name.string)
-        print tup
         type_list = []
         for form in f.formal_list:
           if f.formal_type.string == "SELF_TYPE":
@@ -600,6 +614,113 @@ def parse_expression():
 
 parse_program()
 
+object_identifier = identifier(0,"Object")
+object_class = no_inherits(object_identifier)
+object_feature_1_identifier = (0,"abort")
+object_feature_1_formal_list = []
+object_feature_1_return_type = (0,"Object")
+object_feature_1_body = ("body")
+object_m1 = method(object_feature_1_identifier, object_feature_1_formal_list, 
+            object_feature_1_return_type, object_feature_1_body)
+object_feature_2_identifier = (0,"type_name")
+object_feature_2_formal_list = []
+object_feature_2_return_type = (0,"String")
+object_feature_2_body = ("body")
+object_m2 = method(object_feature_2_identifier, object_feature_2_formal_list, 
+            object_feature_2_return_type, object_feature_2_body)
+object_feature_3_identifier = (0,"copy")
+object_feature_3_formal_list = []
+object_feature_3_return_type = (0,"SELF_TYPE")
+object_feature_3_body = ("body")
+object_m3 = method(object_feature_3_identifier, object_feature_3_formal_list, 
+            object_feature_3_return_type, object_feature_3_body)
+object_class.addFeature(object_m1)
+object_class.addFeature(object_m2)
+object_class.addFeature(object_m3)
+p.class_list.append(object_class)
+
+IO_identifier = identifier(0,"IO")
+IO_class = inherits(IO_identifier, object_identifier)
+IO_feature_1_identifier = identifier(0,"out_string")
+IO_formal_name_1 = identifier(0,"x")
+IO_formal_type_1 = identifier(0,"String")
+IO_feature_1_formal = formal(IO_formal_name_1, IO_formal_type_1)
+IO_feature_1_formal_list = [IO_feature_1_formal]
+IO_feature_1_return_type = identifier(0,"SELF_TYPE")
+IO_feature_1_body = ("body")
+IO_m1 = method(IO_feature_1_identifier, IO_feature_1_formal_list,
+        IO_feature_1_return_type, IO_feature_1_body)
+IO_feature_2_identifier = identifier(0,"out_int")
+IO_formal_name_2 = identifier(0,"x")
+IO_formal_type_2 = identifier(0,"Int")
+IO_feature_2_formal = formal(IO_formal_name_2, IO_formal_type_2)
+IO_feature_2_formal_list = [IO_feature_2_formal]
+IO_feature_2_return_type = identifier(0,"SELF_TYPE")
+IO_feature_2_body = ("body")
+IO_m2 = method(IO_feature_2_identifier, IO_feature_2_formal_list,
+        IO_feature_2_return_type, IO_feature_2_body)
+IO_feature_3_identifier = identifier(0,"in_string")
+IO_feature_3_formal_list = []
+IO_feature_3_return_type = identifier(0,"String")
+IO_feature_3_body = ("body")
+IO_m3 = method(IO_feature_3_identifier, IO_feature_3_formal_list,
+        IO_feature_3_return_type, IO_feature_3_body)
+IO_feature_4_identifier = identifier(0,"in_int")
+IO_feature_4_formal_list = []
+IO_feature_4_return_type = identifier(0,"Int")
+IO_feature_4_body = ("body")
+IO_m4 = method(IO_feature_4_identifier, IO_feature_4_formal_list,
+        IO_feature_4_return_type, IO_feature_4_body)
+IO_class.addFeature(IO_m1)
+IO_class.addFeature(IO_m2)
+IO_class.addFeature(IO_m3)
+IO_class.addFeature(IO_m4)
+p.class_list.append(IO_class)
+
+Bool_identifier = identifier(0,"Bool")
+Bool_class = inherits(Bool_identifier, object_identifier)
+p.class_list.append(Bool_class)
+
+Int_identifier = identifier(0,"Int")
+Int_class = inherits(Int_identifier, object_identifier)
+p.class_list.append(Int_class)
+
+String_identifier = identifier(0,"String")
+String_class = inherits(String_identifier, object_identifier)
+String_feature_1_identifier = identifier(0,"length")
+String_feature_1_formal_list = []
+String_feature_1_return_type = identifier(0,"Int")
+String_feature_1_body = ("body")
+String_m1 = method(String_feature_1_identifier, String_feature_1_formal_list,
+            String_feature_1_return_type, String_feature_1_body)
+String_feature_2_identifier = identifier(0,"concat")
+String_feature_2_formal_name = identifier(0,"s")
+String_feature_2_formal_type = identifier(0,"String")
+String_feature_2_formal = formal(String_feature_2_formal_name, String_feature_2_formal_type)
+String_feature_2_formal_list = [String_feature_2_formal]
+String_feature_2_return_type = identifier(0,"String")
+String_feature_2_body = ("body")
+String_m2 = method(String_feature_2_identifier, String_feature_2_formal_list,
+            String_feature_2_return_type, String_feature_2_body)
+
+String_feature_3_identifier = identifier(0,"concat")
+String_feature_3_formal_name1 = identifier(0,"i")
+String_feature_3_formal_type1 = identifier(0,"Int")
+String_feature_3_formal1 = formal(String_feature_3_formal_name1, String_feature_3_formal_type1)
+String_feature_3_formal_name2 = identifier(0,"l")
+String_feature_3_formal_type2 = identifier(0,"Int")
+String_feature_3_formal2 = formal(String_feature_3_formal_name2, String_feature_3_formal_type2)
+String_feature_3_formal_list = [String_feature_3_formal1, String_feature_3_formal2]
+String_feature_3_return_type = identifier(0,"String")
+String_feature_3_body = ("body")
+String_m3 = method(String_feature_3_identifier, String_feature_3_formal_list,
+            String_feature_3_return_type, String_feature_3_body)
+
+
+Bool_identifier = identifier(0,"Bool")
+Bool_class = inherits(Bool_identifier, object_identifier)
+
+
 
 for n in range(0,len(p.class_list)):
   for c in p.class_list:
@@ -608,7 +729,7 @@ for n in range(0,len(p.class_list)):
     else:
       Object_tree.insert(c.superclass.string, c.name.string)
 
-print Object_tree
+# print Object_tree
 
 for c in p.class_list:
   if not Object_tree.find(c.name.string):
@@ -617,6 +738,15 @@ for c in p.class_list:
 
 
 # print p 
+
+
+
+# print "class_map"
+# for c in p.class_list:
+#   print c.
+
+
+
 
 
 
