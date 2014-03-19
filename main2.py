@@ -9,10 +9,9 @@ except:
  print "improper file entry"
 
 
-#how to handle self_type?
-M = {("Object","abort"):[("Class","Object")], \
-    ("Object","type_name"):[("Class","String")],\
-    ("Object","copy"):[("SELF_TYPE","C")],\
+M = {("Object","abort"):[("Class","Object")], 
+    ("Object","type_name"):[("Class","String")],
+    ("Object","copy"):[("SELF_TYPE","C")],
     ("IO","out_string"):[("Class","String"),("SELF_TYPE","C")],
     ("IO","out_int"):[("Class","Int"),("SELF_TYPE","C")],
     ("IO","in_string"):[("Class","String")],
@@ -22,7 +21,51 @@ M = {("Object","abort"):[("Class","Object")], \
     ("String","substr"):[("Class","Int"),("Class","Int"),("Class","String")]
     }
 
+class inheritance_node:
+  def __init__(self, class_name):
+    self.class_name = class_name
+    self.child_list = []
+
+  def __str__(self):
+    child_string = ""
+    for c in self.child_list:
+      child_string = child_string + "\n" + str(c) 
+    return self.class_name + child_string
+
+  def insert(self, inherits_from, class_name):
+    if self.class_name == inherits_from:
+      found = False
+      for c in self.child_list:
+        if c.class_name == class_name:
+          found = True
+      if not found:
+        n = inheritance_node(class_name)
+        self.child_list.append(n)
+    else:
+      for c in self.child_list:
+        c.insert(inherits_from,class_name)
+
+  def find(self, class_name):
+    if self.class_name == class_name:
+      return True
+    else:
+      found = False
+      for c in self.child_list:
+        if c.find(class_name):
+          found = True
+          break
+      return found 
+  
+
+Object_tree = inheritance_node("Object")
+Object_tree.insert("Object","String")
+Object_tree.insert("Object","Int")
+Object_tree.insert("Object","Bool")
+Object_tree.insert("Object","IO")
+
 def list_to_string(list):
+  if len(list) == 0:
+    return ""
   list_string = ""
   for n in list:
     list_string = list_string + str(n)
@@ -43,19 +86,24 @@ class no_inherits:
   def __init__(self, name):
     self.name = name
     self.feature_list = []
+    self.allFeatures = []
   def addFeature(self, feature):
     self.feature_list.append(feature)
+    self.allFeatures.append(feature)
   def __str__(self):
     return str(self.name) + "\nno_inherits\n" + str(len(self.feature_list)) \
      + list_to_string(self.feature_list) 
+
 
 class inherits:
   def __init__(self, name, superclass):
   	self.name = name
   	self.superclass = superclass
   	self.feature_list = []
+    self.allFeatures = []
   def addFeature(self, feature):
   	self.feature_list.append(feature)
+    self.allFeatures.append(feature)
   def __str__(self):
     return str(self.name) + "\ninherits\n" + str(self.superclass) + "\n" \
     + str(len(self.feature_list)) + list_to_string(self.feature_list)
@@ -352,6 +400,21 @@ def parse_class():
     for n in range(0,num_features):
       f = parse_feature()
       c.addFeature(f)
+      if isinstance(f,method):
+        tup = (c.name.string,f.name.string)
+        print tup
+        type_list = []
+        for form in f.formal_list:
+          if f.formal_type.string == "SELF_TYPE":
+            type_list.append(("SELF_TYPE","C"))
+          else:
+           type_list.append("Class",f.formal_type.string)
+        if f.return_type.string == "SELF_TYPE":
+          type_list.append(("SELF_TYPE","C"))
+        else:
+          type_list.append(("Class",f.return_type.string))
+        M[tup] = type_list
+        #add this method to M
   else:
     superclass = parse_identifier()
     c = inherits(name, superclass)
@@ -359,6 +422,21 @@ def parse_class():
     for n in range(0,num_features):
       f = parse_feature()
       c.addFeature(f)
+      if isinstance(f,method):
+        tup = (c.name.string,f.name.string)
+        print tup
+        type_list = []
+        for form in f.formal_list:
+          if f.formal_type.string == "SELF_TYPE":
+            type_list.append(("SELF_TYPE","C"))
+          else:
+           type_list.append("Class",f.formal_type.string)
+        if f.return_type.string == "SELF_TYPE":
+          type_list.append(("SELF_TYPE","C"))
+        else:
+          type_list.append(("Class",f.return_type.string))
+        M[tup] = type_list
+        #add this Method to M
   return c
 
 def parse_identifier():
@@ -520,15 +598,27 @@ def parse_expression():
     expression = case_object(lineno, case_expression, branch_list)  
   return expression
 
-
- #typecheck loop omc assignment --- create o for each class, then create 
-
-
-
 parse_program()
 
-print M
-print p 
+
+for n in range(0,len(p.class_list)):
+  for c in p.class_list:
+    if isinstance(c, no_inherits):
+      Object_tree.insert("Object",c.name.string)
+    else:
+      Object_tree.insert(c.superclass.string, c.name.string)
+
+print Object_tree
+
+for c in p.class_list:
+  if not Object_tree.find(c.name.string):
+    print "ERROR: "+ c.name.lineno +": Type-Check:bad inheritance"
+    sys.exit()
+
+
+# print p 
+
+
 
 
 

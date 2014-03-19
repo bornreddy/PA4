@@ -8,5 +8,29 @@ class Main inherits IO  {
 };
 
 class Marisa {
+  main() : Bool {
+   true
+  };
   i : Int;
+};
+
+class D inherits B {
+
+};
+
+class E inherits B {
+
+};
+
+class B inherits A {
+
+};
+
+class C inherits A {
+
+};
+
+
+class A {
+
 };
